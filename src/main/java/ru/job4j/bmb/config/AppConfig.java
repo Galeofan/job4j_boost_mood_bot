@@ -12,6 +12,6 @@ public class AppConfig {
 
     @PostConstruct
     public void printConfig() {
-        System.out.println("App Name: " + appName);
+        System.out.println("AppConfig | App Name: " + appName);
     }
 }

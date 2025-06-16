@@ -37,7 +37,6 @@ public class TelegramBotService implements BeanNameAware, ApplicationContextAwar
     @PostConstruct
     public void init() {
         System.out.println("Bean TelegramBotService is going through init.");
-        displayAllBeanNames();
     }
 
     @PreDestroy
