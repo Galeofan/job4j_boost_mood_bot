@@ -8,10 +8,13 @@ import org.springframework.stereotype.Component;
 public class AppConfig {
 
     @Value("${telegram.bot.name}")
-    String appName;
+    String botName;
+    @Value("${telegram.bot.token}")
+    String botToken;
 
     @PostConstruct
     public void printConfig() {
-        System.out.println("AppConfig | App Name: " + appName);
+        System.out.println("AppConfig | botName: " + botName);
+        System.out.println("AppConfig | botToken: " + botToken);
     }
 }
