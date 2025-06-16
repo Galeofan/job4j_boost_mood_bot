@@ -19,6 +19,6 @@ public class BotCommandHandler {
     }
 
     void receive(Content content) {
-        System.out.println(content);
+        System.out.println(content.toString());
     }
 }

@@ -9,11 +9,11 @@ public class ReminderService {
 
     @PostConstruct
     public void init() {
-        System.out.println("Bean is going through init.");
+        System.out.println("Bean ReminderService is going through init.");
     }
 
     @PreDestroy
     public void destroy() {
-        System.out.println("Bean will be destroyed now.");
+        System.out.println("Bean ReminderService will be destroyed now.");
     }
 }
