@@ -1,5 +1,9 @@
 package ru.job4j.bmb.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.util.Objects;
 
 public class User {
@@ -39,23 +43,31 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         User user = (User) o;
-        return clientId == user.clientId && chatId == user.chatId && Objects.equals(id, user.id);
+
+        return new EqualsBuilder().append(clientId, user.clientId).append(chatId, user.chatId).append(id, user.id).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, clientId, chatId);
+        return new HashCodeBuilder(17, 37).append(id).append(clientId).append(chatId).toHashCode();
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", clientId=" + clientId +
-                ", chatId=" + chatId +
-                '}';
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("clientId", clientId)
+                .append("chatId", chatId)
+                .toString();
     }
 }
 
