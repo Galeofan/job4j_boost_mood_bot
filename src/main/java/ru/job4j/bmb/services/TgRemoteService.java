@@ -8,6 +8,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.job4j.bmb.model.User;
+import ru.job4j.bmb.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,18 +20,15 @@ import java.util.Map;
 public class TgRemoteService extends TelegramLongPollingBot {
 
     private final String botName;
-    private final String botToken;
     private static final Map<String, String> MOOD_RESP = new HashMap<>();
+    private final UserRepository userRepository;
 
     public TgRemoteService(@Value("${telegram.bot.name}") String botName,
-                           @Value("${telegram.bot.token}") String botToken) {
+                           @Value("${telegram.bot.token}") String botToken,
+                           UserRepository userRepository) {
+        super(botToken);
         this.botName = botName;
-        this.botToken = botToken;
-    }
-
-    @Override
-    public String getBotToken() {
-        return botToken;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -47,18 +46,26 @@ public class TgRemoteService extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        var message = update.getMessage();
         if (update.hasCallbackQuery()) {
             var data = update.getCallbackQuery().getData();
             var chatId = update.getCallbackQuery().getMessage().getChatId();
             send(new SendMessage(String.valueOf(chatId), MOOD_RESP.get(data)));
-        }
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            long chatId = update.getMessage().getChatId();
-            send(sendButtons(chatId));
+        } else if (update.hasMessage() && update.getMessage().hasText()) {
+            long chatId = message.getChatId();
+            if ("/start".equals(message.getText())) {
+                var user = new User();
+                user.setClientId(message.getFrom().getId());
+                user.setChatId(chatId);
+                userRepository.save(user);
+                send(sendButtons(chatId));  // Метод для отправки кнопок пользователю
+            } else {
+                send(new SendMessage(String.valueOf(chatId), "Дефолтное сообщение"));
+            }
         }
     }
 
-    private void send(SendMessage message) {
+    void send(SendMessage message) {
         try {
             execute(message);
         } catch (TelegramApiException e) {
