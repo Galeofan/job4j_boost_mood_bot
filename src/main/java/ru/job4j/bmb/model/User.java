@@ -1,11 +1,5 @@
 package ru.job4j.bmb.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import java.util.Objects;
-
 public class User {
     private Long id;
     private long clientId;
@@ -24,20 +18,20 @@ public class User {
         return id;
     }
 
-    public long getClientId() {
-        return clientId;
-    }
-
-    public long getChatId() {
-        return chatId;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
+    public long getClientId() {
+        return clientId;
+    }
+
     public void setClientId(long clientId) {
         this.clientId = clientId;
+    }
+
+    public long getChatId() {
+        return chatId;
     }
 
     public void setChatId(long chatId) {
@@ -46,31 +40,28 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
         User user = (User) o;
-
-        return new EqualsBuilder().append(clientId, user.clientId).append(chatId, user.chatId).append(id, user.id).isEquals();
+        return clientId == user.clientId && chatId == user.chatId && id.equals(user.id);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(clientId).append(chatId).toHashCode();
+        int result = id.hashCode();
+        result = 31 * result + Long.hashCode(clientId);
+        result = 31 * result + Long.hashCode(chatId);
+        return result;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("id", id)
-                .append("clientId", clientId)
-                .append("chatId", chatId)
-                .toString();
+        return "User{"
+                + "id=" + id
+                + ", clientId=" + clientId
+                + ", chatId=" + chatId + '}';
     }
 }
 
